@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +46,7 @@ public final class Utils {
 
     public static Map<String, Object> getPropertyValue(Object object, List<String> propertyList, boolean isValueNotNull) {
         Class<?> clazz = (Class<?>) object.getClass();
-        Map<String, Object> valueMap = new HashMap<String, Object>(0);
+        Map<String, Object> valueMap = new LinkedHashMap<String, Object>(0);
 
         if (propertyList == null) {
             propertyList = getPropertyFromObject(clazz);

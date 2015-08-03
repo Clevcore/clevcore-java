@@ -17,7 +17,7 @@ public final class Utils {
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private static Comparator getComparator(final String property, final boolean ascendingOrder) {
+    public static Comparator getComparator(final String property, final boolean ascendingOrder) {
         Comparator comparator = new Comparator() {
             public int compare(Object object0, Object object1) {
                 int aux = 0;

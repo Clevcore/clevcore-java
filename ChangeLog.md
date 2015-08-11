@@ -1,0 +1,6 @@
+-v1.2.0 New Release v1.2.0
+-Us-88: Convert "getComparator" method in public in Utils class
+-BG-19: In persistence class, the tables of "from" should be ordered by prioridad
+-v1.1.0
+-US-31: Clevcore-Engine migration to GitHub
+-Initial commit

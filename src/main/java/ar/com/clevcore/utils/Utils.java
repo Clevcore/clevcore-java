@@ -175,6 +175,7 @@ public final class Utils {
         try {
             Collections.sort(list, getComparator(property, ascendingOrder));
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return list;

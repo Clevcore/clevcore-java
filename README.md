@@ -1,2 +1,2 @@
 # clevcore-java
-Java Utils Lib
+Java lib

@@ -49,7 +49,7 @@ public final class Utils {
         Map<String, Object> valueMap = new LinkedHashMap<String, Object>(0);
 
         if (propertyList == null) {
-            propertyList = getPropertyFromObject(clazz);
+            propertyList = getPropertiesFromObject(clazz);
         } else {
             prepareProperties(propertyList, clazz);
         }
@@ -75,7 +75,7 @@ public final class Utils {
         Class<? extends Object> clazz = objectList.get(0).getClass();
 
         if (propertyList == null) {
-            propertyList = getPropertyFromObject(clazz);
+            propertyList = getPropertiesFromObject(clazz);
         } else {
             prepareProperties(propertyList, clazz);
         }
@@ -115,13 +115,13 @@ public final class Utils {
         for (int i = 0; i < propertyList.size(); i++) {
             if (propertyList.get(i).equals("*")) {
                 propertyList.remove(i);
-                propertyList.addAll(i, getPropertyFromObject(clazz));
+                propertyList.addAll(i, getPropertiesFromObject(clazz));
                 break;
             }
         }
     }
 
-    public static List<String> getPropertyFromObject(Class<?> clazz) {
+    public static List<String> getPropertiesFromObject(Class<?> clazz) {
         List<String> propertyList = new ArrayList<String>();
         for (Field field : clazz.getDeclaredFields()) {
             if (isNativeType(field.getType())) {

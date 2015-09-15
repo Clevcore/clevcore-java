@@ -41,7 +41,7 @@ public final class OfficeUtils {
             short columnIndex;
 
             if (propertyList == null) {
-                propertyList = Utils.getPropertyFromObject(objectList.get(0).getClass());
+                propertyList = Utils.getPropertiesFromObject(objectList.get(0).getClass());
             } else {
                 Utils.prepareProperties(propertyList, objectList.get(0).getClass());
             }

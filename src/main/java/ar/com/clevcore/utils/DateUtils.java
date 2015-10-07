@@ -55,13 +55,13 @@ public final class DateUtils {
         return new Date(calendar.getTimeInMillis());
     }
 
-    public static Date getDate(int year, int month, int day) throws Exception {
+    public static Date getDate(int year, int month, int day) {
         Calendar calendar = getCalendarNotTolerant();
         calendar.set(year, month - 1, day, 0, 0, 0);
         return new Date(calendar.getTimeInMillis());
     }
 
-    public static Calendar getCalendar(int year, int month, int day) throws Exception {
+    public static Calendar getCalendar(int year, int month, int day) {
         Calendar calendar = getCalendarNotTolerant();
         calendar.set(year, month - 1, day, 0, 0, 0);
         return calendar;

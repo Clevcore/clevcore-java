@@ -8,7 +8,7 @@ import ar.com.clevcore.exceptions.ClevcoreException.Severity;
 
 public final class ExceptionUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(ExceptionUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExceptionUtils.class);
 
     private ExceptionUtils() {
         throw new AssertionError();
@@ -16,14 +16,7 @@ public final class ExceptionUtils {
 
     // TODO: We must create a log, We can use log4j
     public static void treateException(Exception e, Object object) throws ClevcoreException {
-        log.error("[E] Exception Received with object {} ", object.getClass().getName(),  e);
-        
-        System.out.println("Message: " + e.getMessage());
-        System.out.println("Severity: " + Severity.FATAL);
-        System.out.println("errorCode: " + -1);
-        System.out.println("Cause: " + e.getCause());
-        System.out.println("Object: " + object.toString());
-
+        LOG.error("[E] Exception Received with object {} ", object.getClass().getName(),  e);
         throw new ClevcoreException(Severity.FATAL, e.getMessage(), -1, e.getCause(), object);
     }
 

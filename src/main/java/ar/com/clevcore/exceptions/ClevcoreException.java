@@ -7,21 +7,12 @@ public class ClevcoreException extends Exception {
         ERROR, FATAL
     }
 
-    private Severity severity;
-    private String message;
+    private final Severity severity;
+    private final String message;
 
-    private int errorCode;
-    private Throwable cause;
-    private Object object;
-
-    public ClevcoreException() {
-    }
-
-    public ClevcoreException(Severity severity, String message) {
-        super();
-        this.severity = severity;
-        this.message = message;
-    }
+    private final int errorCode;
+    private final Throwable cause;
+    private final Object object;
 
     public ClevcoreException(Severity severity, String message, int errorCode, Throwable cause, Object object) {
         super();
@@ -33,44 +24,24 @@ public class ClevcoreException extends Exception {
     }
 
     // GETTER & SETTER
+    @Override
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public Severity getSeverity() {
         return severity;
     }
 
-    public void setSeverity(Severity severity) {
-        this.severity = severity;
-    }
-
     public int getErrorCode() {
         return errorCode;
     }
-
-    public void setErrorCode(int errorCode) {
-        this.errorCode = errorCode;
-    }
-
+    @Override
     public Throwable getCause() {
         return cause;
-    }
-
-    public void setCause(Throwable cause) {
-        this.cause = cause;
     }
 
     public Object getObject() {
         return object;
     }
-
-    public void setObject(Object object) {
-        this.object = object;
-    }
-
 }

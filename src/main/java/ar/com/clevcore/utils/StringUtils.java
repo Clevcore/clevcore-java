@@ -1,15 +1,25 @@
 package ar.com.clevcore.utils;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class StringUtils {
+
+    private static final Logger LOG = LoggerFactory.getLogger(StringUtils.class);
 
     private static final String SECRET_KEY = "Clevcore";
 
@@ -33,9 +43,10 @@ public final class StringUtils {
             byte[] buf = cipher.doFinal(plainTextBytes);
             byte[] base64Bytes = Base64.encodeBase64(buf);
             base64EncryptedString = new String(base64Bytes);
-        } catch (Exception ex) {
+        } catch (InvalidKeyException | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException
+                | NoSuchAlgorithmException | NoSuchPaddingException e) {
+            LOG.error("[E] IOException occurred in [encrypt]", e);
         }
-
         return base64EncryptedString;
     }
 
@@ -55,9 +66,10 @@ public final class StringUtils {
             byte[] plainText = decipher.doFinal(message);
 
             base64EncryptedString = new String(plainText, "UTF-8");
-        } catch (Exception ex) {
+        } catch (InvalidKeyException | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException
+                | NoSuchAlgorithmException | NoSuchPaddingException e) {
+            LOG.error("[E] IOException occurred in [decrypt]", e);
         }
-
         return base64EncryptedString;
     }
 

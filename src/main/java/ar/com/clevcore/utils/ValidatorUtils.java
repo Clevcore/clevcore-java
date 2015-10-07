@@ -18,7 +18,7 @@ public final class ValidatorUtils {
     }
 
     public static boolean yearValidator(int year, int maxYear, int minYear) {
-        return (year <= maxYear && year >= minYear);
+        return year <= maxYear && year >= minYear;
     }
 
 }

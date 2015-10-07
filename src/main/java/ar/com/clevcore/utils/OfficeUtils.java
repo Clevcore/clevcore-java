@@ -3,6 +3,7 @@ package ar.com.clevcore.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.Iterator;
@@ -19,14 +20,19 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 public final class OfficeUtils {
+
+    private static final Logger LOG = LoggerFactory.getLogger(OfficeUtils.class);
 
     private OfficeUtils() {
         throw new AssertionError();
@@ -40,7 +46,7 @@ public final class OfficeUtils {
             int rowIndex = 0;
             short columnIndex;
 
-            if (propertyList == null) {
+            if (propertyList == null || propertyList.isEmpty()) {
                 propertyList = Utils.getPropertiesFromObject(objectList.get(0).getClass());
             } else {
                 Utils.prepareProperties(propertyList, objectList.get(0).getClass());
@@ -80,12 +86,9 @@ public final class OfficeUtils {
                 columnIndex = 0;
                 row = sheet.createRow(rowIndex++);
                 for (String property : propertyList) {
-                    try {
                         cell = row.createCell(columnIndex++);
                         setCellValueSetter(cell, Utils.getValueFromProperty(object, property), csRow, csRowDate,
                                 csRowDouble);
-                    } catch (Exception e) {
-                    }
                 }
             }
 
@@ -105,13 +108,14 @@ public final class OfficeUtils {
             }
 
             return file.getName();
-        } catch (Exception e) {
-            return null;
+        } catch (IOException e) {
+            LOG.error("[E] IOException occurred in [getExcel]", e);
         }
+        return null;
     }
 
-    public static String getPdf(List<Object> objectList, List<String> propertyList, String path,
-            boolean newFormatExcel, String patternDate) {
+    public static String getPdf(List<Object> objectList, List<String> propertyList, String path, boolean newFormatExcel,
+            String patternDate) {
         try {
             String excelFile = getExcel(objectList, propertyList, path, newFormatExcel, patternDate);
             String pdfFile = excelFile.substring(0, excelFile.lastIndexOf(".")) + ".pdf";
@@ -133,11 +137,9 @@ public final class OfficeUtils {
                 Iterator<Cell> cellIterator = row.cellIterator();
                 while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
-                    switch (cell.getCellType()) {
-                    case Cell.CELL_TYPE_STRING:
+                    if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
                         pdfCell = new PdfPCell(new Phrase(cell.getStringCellValue()));
                         pdfTable.addCell(pdfCell);
-                        break;
                     }
                 }
             }
@@ -147,9 +149,10 @@ public final class OfficeUtils {
             input_document.close();
 
             return pdfFile;
-        } catch (Exception e) {
-            return null;
+        } catch (IOException | DocumentException e) {
+            LOG.error("[E] IOException occurred in [getPdf]", e);
         }
+        return null;
     }
 
     // HELPER

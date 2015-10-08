@@ -77,7 +77,7 @@ public final class Utils {
 
         Class<? extends Object> clazz = objectList.get(0).getClass();
 
-        if (propertyList == null || propertyList.isEmpty()) {
+        if (propertyList == null) {
             propertyList = getPropertiesFromObject(clazz);
         } else {
             prepareProperties(propertyList, clazz);
@@ -89,26 +89,24 @@ public final class Utils {
 
         for (Object object : objectList) {
             for (String property : propertyList) {
-                Object value = getValueFromProperty(object, property);
-                if (value != null && !value.toString().isEmpty()) {
-                    if (Date.class.equals(value.getClass())) {
-                        try {
+                try {
+                    Object value = getValueFromProperty(object, property);
+                    if (value != null && !value.toString().isEmpty()) {
+                        if (Date.class.equals(value.getClass())) {
                             value = DateUtils.getDateFormat((Date) value, patternDate);
-                        } catch (ParseException e) {
-                            LOG.error("[E] ParseException occurred in [searchObject]", e);
+                        } else if (!isCaseSensitive) {
+                            value = value.toString().toLowerCase();
                         }
-                    } else if (!isCaseSensitive) {
-                        value = value.toString().toLowerCase();
+                        if (value.toString().contains(search)) {
+                            objectResultList.add(object);
+                            break;
+                        }
                     }
-                    if (value.toString().contains(search)) {
-                        objectResultList.add(object);
-                        break;
-                    }
+                } catch (ParseException e) {
+                    LOG.error("[E] ParseException occurred in [searchObject]", e);
                 }
-
             }
         }
-
         return objectResultList;
     }
 
@@ -160,26 +158,31 @@ public final class Utils {
     }
 
     public static Object getValueFromProperty(Object object, String property) {
-        Object methodResult = object;
         try {
             String[] propertyArray = property.split("\\.");
             for (int i = 0; i < propertyArray.length; i++) {
                 String getterMethodString = toGetterMethodString(propertyArray[i]);
-                Method method = methodResult.getClass().getMethod(getterMethodString);
-                methodResult = method.invoke(methodResult);
+                Method method = object.getClass().getMethod(getterMethodString);
+                object = method.invoke(object);
             }
-        } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
+        } catch (Exception e) {
             LOG.error("[E] Exception occurred in [getValueFromProperty]", e);
         }
-        return methodResult;
+        return object;
     }
 
-    public static List sortList(List list, String property, boolean ascendingOrder) {
+    @SuppressWarnings({ "unchecked" })
+    public static List<?> sortList(List<?> list, String property, boolean ascendingOrder) {
         if (list == null || list.size() < 2) {
             return list;
         }
-        Collections.sort(list, getComparator(property, ascendingOrder));
+
+        try {
+            Collections.sort(list, getComparator(property, ascendingOrder));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return list;
     }
 

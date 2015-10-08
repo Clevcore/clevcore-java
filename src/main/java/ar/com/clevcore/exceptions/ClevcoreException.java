@@ -7,12 +7,15 @@ public class ClevcoreException extends Exception {
         ERROR, FATAL
     }
 
-    private final Severity severity;
-    private final String message;
+    private Severity severity;
+    private String message;
 
-    private final int errorCode;
-    private final Throwable cause;
-    private final Object object;
+    private int errorCode;
+    private Throwable cause;
+    private Object object;
+    
+    public ClevcoreException(){
+    }
 
     public ClevcoreException(Severity severity, String message, int errorCode, Throwable cause, Object object) {
         super();

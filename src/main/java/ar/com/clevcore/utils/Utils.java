@@ -161,9 +161,13 @@ public final class Utils {
         try {
             String[] propertyArray = property.split("\\.");
             for (int i = 0; i < propertyArray.length; i++) {
-                String getterMethodString = toGetterMethodString(propertyArray[i]);
-                Method method = object.getClass().getMethod(getterMethodString);
-                object = method.invoke(object);
+                if (object != null) {
+                    String getterMethodString = toGetterMethodString(propertyArray[i]);
+                    Method method = object.getClass().getMethod(getterMethodString);
+                    object = method.invoke(object);
+                }else{
+                    break;
+                }
             }
         } catch (Exception e) {
             LOG.error("[E] Exception occurred in [getValueFromProperty]", e);

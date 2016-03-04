@@ -27,4 +27,30 @@ public final class IntegerUtils {
         return array;
     }
 
+    public static Boolean isInteger(String value) {
+        if (value == null) {
+            return false;
+        }
+
+        int length = value.length();
+
+        if (length == 0) {
+            return false;
+        }
+
+        if (value.charAt(0) == '-') {
+            if (length == 1) {
+                return false;
+            }
+        }
+
+        for (int i = 1; i < length; i++) {
+            if (!Character.isDigit(value.charAt(i))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }

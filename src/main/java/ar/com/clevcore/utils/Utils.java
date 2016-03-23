@@ -45,8 +45,7 @@ public final class Utils {
         return comparator;
     }
 
-    public static Map<String, Object> getPropertyValue(Object object, List<String> propertyList,
-            boolean isValueNotNull) {
+    public static Map<String, Object> getPropertyValue(Object object, List<String> propertyList, boolean isValueNotNull) {
         Class<?> clazz = (Class<?>) object.getClass();
         Map<String, Object> valueMap = new LinkedHashMap<String, Object>(0);
 
@@ -164,7 +163,7 @@ public final class Utils {
                     String getterMethodString = toGetterMethodString(propertyArray[i]);
                     Method method = object.getClass().getMethod(getterMethodString);
                     object = method.invoke(object);
-                }else{
+                } else {
                     break;
                 }
             }

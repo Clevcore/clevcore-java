@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public final class FileUtils {
 
@@ -25,6 +29,18 @@ public final class FileUtils {
 
     public static boolean deleteFile(String path, String name) {
         return new File(path + File.separator + name).delete();
+    }
+
+    public static String fileToString(String path) throws IOException, URISyntaxException {
+        return fileToString(path, "utf-8");
+    }
+
+    public static String fileToString(String path, String encoding) throws IOException, URISyntaxException {
+        URI uri = FileUtils.class.getClassLoader().getResource(path).toURI();
+
+        byte[] encoded = Files.readAllBytes(Paths.get(uri));
+
+        return new String(encoded, encoding);
     }
 
 }

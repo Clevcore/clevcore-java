@@ -114,6 +114,7 @@ public final class OfficeUtils {
         return null;
     }
 
+    @SuppressWarnings("resource")
     public static String getPdf(List<Object> objectList, List<String> propertyList, String path, boolean newFormatExcel,
             String patternDate) {
         try {

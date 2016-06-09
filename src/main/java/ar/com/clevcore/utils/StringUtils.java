@@ -104,6 +104,13 @@ public final class StringUtils {
         return index;
     }
 
+    public static String removeWhitespace(String value) {
+        if (value != null) {
+            return value.trim().replaceAll("\\s+", "");
+        }
+        return value;
+    }
+
     public static String splitFirst(String value, String regex) {
         if (value != null) {
             String[] values = value.split(regex);
@@ -126,7 +133,7 @@ public final class StringUtils {
 
     public static String trimAll(String value) {
         if (value != null) {
-            return value.trim().replaceAll("\\p{Space}+", " ");
+            return value.trim().replaceAll("\\s+", " ");
         }
         return value;
     }

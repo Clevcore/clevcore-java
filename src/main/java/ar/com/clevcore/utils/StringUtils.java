@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 public final class StringUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StringUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(StringUtils.class);
 
     private static final String SECRET_KEY = "Clevcore";
 
@@ -45,7 +45,7 @@ public final class StringUtils {
             base64EncryptedString = new String(base64Bytes);
         } catch (InvalidKeyException | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException
                 | NoSuchAlgorithmException | NoSuchPaddingException e) {
-            LOG.error("[E] IOException occurred in [encrypt]", e);
+            log.error("[E] IOException occurred in [encrypt]", e);
         }
         return base64EncryptedString;
     }
@@ -68,7 +68,7 @@ public final class StringUtils {
             base64EncryptedString = new String(plainText, "UTF-8");
         } catch (InvalidKeyException | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException
                 | NoSuchAlgorithmException | NoSuchPaddingException e) {
-            LOG.error("[E] IOException occurred in [decrypt]", e);
+            log.error("[E] IOException occurred in [decrypt]", e);
         }
         return base64EncryptedString;
     }
@@ -143,6 +143,14 @@ public final class StringUtils {
             return value.substring(0, 1).toUpperCase() + value.substring(1);
         }
         return value;
+    }
+
+    public static String prepareToSearch(String value) {
+        return removeSpecialCharacters(value).toUpperCase();
+    }
+
+    public static String removeSpecialCharacters(String value) {
+        return value.replaceAll("[^a-zA-Z0-9]", "");
     }
 
 }

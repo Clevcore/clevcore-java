@@ -150,7 +150,7 @@ public final class StringUtils {
     }
 
     public static String removeSpecialCharacters(String value) {
-        return value.replaceAll("[^a-zA-Z0-9]", "");
+        return value.replaceAll("[^a-zA-Z0-9] ", "");
     }
 
 }

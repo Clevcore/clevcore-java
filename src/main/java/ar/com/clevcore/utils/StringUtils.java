@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.Normalizer;
 import java.util.Arrays;
 
 import javax.crypto.BadPaddingException;
@@ -151,6 +152,12 @@ public final class StringUtils {
 
     public static String removeSpecialCharacters(String value) {
         return value.replaceAll("[^a-zA-Z0-9] ", "");
+    }
+
+    public static String stripAccents(String value) {
+        value = Normalizer.normalize(value, Normalizer.Form.NFD);
+        value = value.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return value;
     }
 
 }

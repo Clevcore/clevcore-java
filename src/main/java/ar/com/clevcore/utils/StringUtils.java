@@ -6,6 +6,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.Normalizer;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -147,11 +149,35 @@ public final class StringUtils {
     }
 
     public static String prepareToSearch(String value) {
-        return removeSpecialCharacters(value).toUpperCase();
+        value = value.toUpperCase();
+        value = removeAccentedCharacters(value);
+        value = removeSpecialCharacters(value);
+
+        return value;
+    }
+
+    public static String removeAccentedCharacters(String value) {
+        Map<String, String> characterMap = new HashMap<String, String>();
+        characterMap.put("a", "[á]");
+        characterMap.put("A", "[Á]");
+        characterMap.put("e", "[é]");
+        characterMap.put("E", "[É]");
+        characterMap.put("i", "[í]");
+        characterMap.put("I", "[Í]");
+        characterMap.put("o", "[ó]");
+        characterMap.put("O", "[Ó]");
+        characterMap.put("u", "[ú]");
+        characterMap.put("U", "[Ú]");
+
+        for (Map.Entry<String, String> entry : characterMap.entrySet()) {
+            value = value.replaceAll(entry.getValue(), entry.getKey());
+        }
+
+        return value;
     }
 
     public static String removeSpecialCharacters(String value) {
-        return value.replaceAll("[^a-zA-Z0-9] ", "");
+        return value.replaceAll("[^a-zA-Z0-9 ]", "");
     }
 
     public static String stripAccents(String value) {

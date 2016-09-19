@@ -7,9 +7,9 @@ import java.security.NoSuchAlgorithmException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class EcryptUtils {
+public final class EncryptUtils {
 
-	private static final Logger log = LoggerFactory.getLogger(EcryptUtils.class);
+	private static final Logger log = LoggerFactory.getLogger(EncryptUtils.class);
 
 	// DIGEST ALGORITHM
 	public static final String MD2 = "MD2";
@@ -24,7 +24,7 @@ public final class EcryptUtils {
 	public static final String DES = "DES";
 	public static final String DESEDE = "DESede";
 
-	private EcryptUtils() {
+	private EncryptUtils() {
 		throw new AssertionError();
 	}
 

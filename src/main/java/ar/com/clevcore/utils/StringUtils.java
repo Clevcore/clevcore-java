@@ -148,6 +148,20 @@ public final class StringUtils {
         return value;
     }
 
+	public static String byteToBase64(byte[] bytes) {
+		return new String(Base64.encodeBase64(bytes));
+	}
+
+	public static String bytesToHex(byte[] bytes) {
+		StringBuffer result = new StringBuffer();
+
+		for (byte byt : bytes) {
+			result.append(Integer.toString((byt & 0xff) + 0x100, 16).substring(1));
+		}
+
+		return result.toString();
+	}
+	
     public static String prepareToSearch(String value) {
         value = value.toUpperCase();
         value = removeAccentedCharacters(value);

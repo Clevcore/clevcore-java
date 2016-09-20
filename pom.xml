@@ -9,13 +9,21 @@
 	<name>Clevcore Java</name>
 
 	<properties>
+		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+		<!-- ITextPdf -->
 		<itextpdf.version>5.0.6</itextpdf.version>
-		<java.version>1.8</java.version>
-		<junit.version>4.11</junit.version>
+
+		<!-- POI -->
 		<poi.version>3.11-beta2</poi.version>
+
+		<!--Logging -->
 		<slf4j.version>1.7.12</slf4j.version>
+		<log4j.version>1.2.17</log4j.version>
+
+		<!-- JUnit -->
+		<junit.version>4.11</junit.version>
 	</properties>
 
 	<dependencies>
@@ -38,14 +46,6 @@
 			<version>${itextpdf.version}</version>
 		</dependency>
 
-		<!-- JUnit -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-
 		<!--Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -60,12 +60,21 @@
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
+			<version>${log4j.version}</version>
+		</dependency>
+
+		<!-- JUnit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
-		<finalName>clevcore-java</finalName>		
+		<finalName>${project.artifactId}-${project.version}</finalName>
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -91,6 +100,7 @@
 				</configuration>
 			</plugin>
 
+			<!-- Eclipse -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>

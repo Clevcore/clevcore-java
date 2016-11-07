@@ -45,7 +45,8 @@ public final class Utils {
         return comparator;
     }
 
-    public static Map<String, Object> getPropertyValue(Object object, List<String> propertyList, boolean isValueNotNull) {
+    public static Map<String, Object> getPropertyValue(Object object, List<String> propertyList,
+            boolean isValueNotNull) {
         Class<?> clazz = (Class<?>) object.getClass();
         Map<String, Object> valueMap = new LinkedHashMap<String, Object>(0);
 
@@ -110,6 +111,10 @@ public final class Utils {
 
     public static String toGetterMethodString(String property) {
         return "get" + StringUtils.upperCaseFirst(property);
+    }
+
+    public static String toSetterMethodString(String property) {
+        return "set" + StringUtils.upperCaseFirst(property);
     }
 
     public static void prepareProperties(List<String> propertyList, Class<?> clazz) {

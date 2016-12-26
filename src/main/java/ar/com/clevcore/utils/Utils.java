@@ -178,6 +178,10 @@ public final class Utils {
         return object;
     }
 
+    public static List<?> sortList(List<?> list, String property) {
+        return sortList(list, property, true);
+    }
+
     @SuppressWarnings({ "unchecked" })
     public static List<?> sortList(List<?> list, String property, boolean ascendingOrder) {
         if (list == null || list.size() < 2) {

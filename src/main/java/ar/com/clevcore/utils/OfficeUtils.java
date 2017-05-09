@@ -38,7 +38,15 @@ public final class OfficeUtils {
         throw new AssertionError();
     }
 
-    public static String getExcel(List<Object> objectList, List<String> propertyList, String path,
+    public static String getExcel(List<?> objectList, List<String> propertyList, String path, boolean isNewFormatExcel,
+            String patternDate) {
+        String name = objectList.get(0).getClass().getName();
+        name = name.substring(name.lastIndexOf(".") + 1);
+
+        return getExcel(name, name, objectList, propertyList, path, isNewFormatExcel, patternDate);
+    }
+
+    public static String getExcel(String title, String name, List<?> objectList, List<String> propertyList, String path,
             boolean isNewFormatExcel, String patternDate) {
         try {
             Row row;
@@ -51,9 +59,6 @@ public final class OfficeUtils {
             } else {
                 Utils.prepareProperties(propertyList, objectList.get(0).getClass());
             }
-
-            String name = objectList.get(0).getClass().getName();
-            name = name.substring(name.lastIndexOf(".") + 1);
 
             Workbook workbook = isNewFormatExcel ? new XSSFWorkbook() : new HSSFWorkbook();
             Sheet sheet = workbook.createSheet(name.length() > 25 ? name.substring(0, 22) + "..." : name);
@@ -69,7 +74,7 @@ public final class OfficeUtils {
             row = sheet.createRow(rowIndex++);
             cell = row.createCell(0);
             cell.setCellStyle(csTitle);
-            cell.setCellValue(name);
+            cell.setCellValue(title);
             rowIndex++;
 
             // head
@@ -86,9 +91,9 @@ public final class OfficeUtils {
                 columnIndex = 0;
                 row = sheet.createRow(rowIndex++);
                 for (String property : propertyList) {
-                        cell = row.createCell(columnIndex++);
-                        setCellValueSetter(cell, Utils.getValueFromProperty(object, property), csRow, csRowDate,
-                                csRowDouble);
+                    cell = row.createCell(columnIndex++);
+                    setCellValueSetter(cell, Utils.getValueFromProperty(object, property), csRow, csRowDate,
+                            csRowDouble);
                 }
             }
 
@@ -115,7 +120,7 @@ public final class OfficeUtils {
     }
 
     @SuppressWarnings("resource")
-    public static String getPdf(List<Object> objectList, List<String> propertyList, String path, boolean newFormatExcel,
+    public static String getPdf(List<?> objectList, List<String> propertyList, String path, boolean newFormatExcel,
             String patternDate) {
         try {
             String excelFile = getExcel(objectList, propertyList, path, newFormatExcel, patternDate);

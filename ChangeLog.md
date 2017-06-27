@@ -1,3 +1,13 @@
+# v1.5.0
+- New Release 1.5.0
+- Add title and name attribute in getExcel
+- Add sortList without ascendingOrder property
+- Add method "toSetterMethodString"
+- Wrong charset
+- Optimize pom file
+- Change name EcryptUtils by EncryptUtils
+- Add encrypt method
+
 # v1.4.0
 - New Release v1.4.0
 - Add removeAccentedCharacters method

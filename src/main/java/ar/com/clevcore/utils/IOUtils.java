@@ -1,6 +1,5 @@
 package ar.com.clevcore.utils;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,18 +10,16 @@ import java.nio.channels.WritableByteChannel;
 
 public final class IOUtils {
 
+    private static final int DEFAULT_STREAM_BUFFER_SIZE = 10240;
+
     private IOUtils() {
         throw new AssertionError();
     }
 
     public static long stream(InputStream input, OutputStream output) throws IOException {
-        ReadableByteChannel inputChannel = null;
-        WritableByteChannel outputChannel = null;
-
-        try {
-            inputChannel = Channels.newChannel(input);
-            outputChannel = Channels.newChannel(output);
-            ByteBuffer buffer = ByteBuffer.allocateDirect(10240);
+        try (ReadableByteChannel inputChannel = Channels.newChannel(input);
+                WritableByteChannel outputChannel = Channels.newChannel(output)) {
+            ByteBuffer buffer = ByteBuffer.allocateDirect(DEFAULT_STREAM_BUFFER_SIZE);
             long size = 0;
 
             while (inputChannel.read(buffer) != -1) {
@@ -32,22 +29,7 @@ public final class IOUtils {
             }
 
             return size;
-        } finally {
-            close(outputChannel);
-            close(inputChannel);
         }
-    }
-
-    public static IOException close(Closeable resource) {
-        if (resource != null) {
-            try {
-                resource.close();
-            } catch (IOException e) {
-                return e;
-            }
-        }
-
-        return null;
     }
 
 }

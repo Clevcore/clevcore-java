@@ -22,6 +22,17 @@ public final class Utils {
         throw new AssertionError();
     }
 
+    @SafeVarargs
+    public static <T> T coalesce(T... objects) {
+        for (T object : objects) {
+            if (object != null) {
+                return object;
+            }
+        }
+
+        return null;
+    }
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static Comparator getComparator(final String property, final boolean ascendingOrder) {
         Comparator comparator = new Comparator() {

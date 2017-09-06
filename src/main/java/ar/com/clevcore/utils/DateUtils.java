@@ -9,6 +9,8 @@ import java.util.TimeZone;
 
 public final class DateUtils {
 
+    public static final String PATTERN_DATE = "dd/MM/yyyy";
+
     private DateUtils() {
         throw new AssertionError();
     }

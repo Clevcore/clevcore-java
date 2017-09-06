@@ -1,12 +1,10 @@
 package ar.com.clevcore.utils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -20,48 +18,69 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
 
 public final class OfficeUtils {
-
-    private static final Logger LOG = LoggerFactory.getLogger(OfficeUtils.class);
 
     private OfficeUtils() {
         throw new AssertionError();
     }
 
-    public static String getExcel(List<?> objectList, List<String> propertyList, String path, boolean isNewFormatExcel,
-            String patternDate) {
-        String name = objectList.get(0).getClass().getName();
-        name = name.substring(name.lastIndexOf(".") + 1);
-
-        return getExcel(name, name, objectList, propertyList, path, isNewFormatExcel, patternDate);
+    public static File getExcel(List<?> objectList, String filePath) throws IOException {
+        return getExcel(objectList, null, null, null, filePath, null, null, null);
     }
 
-    public static String getExcel(String title, String name, List<?> objectList, List<String> propertyList, String path,
-            boolean isNewFormatExcel, String patternDate) {
-        try {
-            Row row;
-            Cell cell;
-            int rowIndex = 0;
-            short columnIndex;
+    public static File getExcel(List<?> objectList, List<String> propertyList, String filePath) throws IOException {
+        return getExcel(objectList, propertyList, null, null, filePath, null, null, null);
+    }
 
+    public static File getExcel(List<?> objectList, List<String> propertyList, List<String> headList, String filePath)
+            throws IOException {
+        return getExcel(objectList, propertyList, headList, null, filePath, null, null, null);
+    }
+
+    public static File getExcel(List<?> objectList, List<String> propertyList, List<String> headList, String title,
+            String filePath, String fileName, Boolean newfileFormat, String patternDate) throws IOException {
+        FileOutputStream output = null;
+
+        Workbook workbook;
+        Sheet sheet;
+        Row row;
+        Cell cell;
+
+        int rowIndex = 0;
+        short columnIndex;
+
+        try {
+            // init
             if (propertyList == null || propertyList.isEmpty()) {
                 propertyList = Utils.getPropertiesFromObject(objectList.get(0).getClass());
             } else {
                 Utils.prepareProperties(propertyList, objectList.get(0).getClass());
             }
 
-            Workbook workbook = isNewFormatExcel ? new XSSFWorkbook() : new HSSFWorkbook();
-            Sheet sheet = workbook.createSheet(name.length() > 25 ? name.substring(0, 22) + "..." : name);
+            if (headList == null) {
+                headList = propertyList;
+            }
+
+            if (title == null) {
+                title = objectList.get(0).getClass().getName();
+                title = title.substring(title.lastIndexOf(".") + 1);
+            }
+
+            if (fileName == null) {
+                fileName = title;
+            }
+
+            if (newfileFormat == null) {
+                newfileFormat = true;
+            }
+
+            if (patternDate == null) {
+                patternDate = DateUtils.PATTERN_DATE;
+            }
+
+            workbook = newfileFormat ? new XSSFWorkbook() : new HSSFWorkbook();
+            sheet = workbook.createSheet();
 
             // style
             CellStyle csTitle = getCellStyleTitle(workbook);
@@ -80,10 +99,10 @@ public final class OfficeUtils {
             // head
             columnIndex = 0;
             row = sheet.createRow(rowIndex++);
-            for (String property : propertyList) {
+            for (String head : headList) {
                 cell = row.createCell(columnIndex++);
                 cell.setCellStyle(csHead);
-                cell.setCellValue(property);
+                cell.setCellValue(head);
             }
 
             // body
@@ -103,62 +122,17 @@ public final class OfficeUtils {
             }
 
             // file
-            File file = File.createTempFile(name, ".xls" + (isNewFormatExcel ? "x" : ""), new File(path));
+            File file = File.createTempFile(fileName, ".xls" + (newfileFormat ? "x" : ""), new File(filePath));
             file.deleteOnExit();
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            workbook.write(fileOutputStream);
 
-            if (fileOutputStream != null) {
-                fileOutputStream.close();
-            }
+            output = new FileOutputStream(file);
 
-            return file.getName();
-        } catch (IOException e) {
-            LOG.error("[E] IOException occurred in [getExcel]", e);
+            workbook.write(output);
+
+            return file;
+        } finally {
+            IOUtils.close(output);
         }
-        return null;
-    }
-
-    @SuppressWarnings("resource")
-    public static String getPdf(List<?> objectList, List<String> propertyList, String path, boolean newFormatExcel,
-            String patternDate) {
-        try {
-            String excelFile = getExcel(objectList, propertyList, path, newFormatExcel, patternDate);
-            String pdfFile = excelFile.substring(0, excelFile.lastIndexOf(".")) + ".pdf";
-
-            FileInputStream input_document = new FileInputStream(path + excelFile);
-            Workbook workbook = (newFormatExcel ? new XSSFWorkbook(input_document) : new HSSFWorkbook(input_document));
-            Sheet sheet = workbook.getSheetAt(0);
-            Iterator<Row> rowIterator = sheet.iterator();
-
-            Document pdf = new Document();
-            PdfWriter.getInstance(pdf, new FileOutputStream(path + pdfFile));
-            pdf.open();
-
-            PdfPTable pdfTable = new PdfPTable(2);
-            PdfPCell pdfCell;
-
-            while (rowIterator.hasNext()) {
-                Row row = rowIterator.next();
-                Iterator<Cell> cellIterator = row.cellIterator();
-                while (cellIterator.hasNext()) {
-                    Cell cell = cellIterator.next();
-                    if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
-                        pdfCell = new PdfPCell(new Phrase(cell.getStringCellValue()));
-                        pdfTable.addCell(pdfCell);
-                    }
-                }
-            }
-
-            pdf.add(pdfTable);
-            pdf.close();
-            input_document.close();
-
-            return pdfFile;
-        } catch (IOException | DocumentException e) {
-            LOG.error("[E] IOException occurred in [getPdf]", e);
-        }
-        return null;
     }
 
     // HELPER

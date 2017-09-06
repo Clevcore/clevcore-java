@@ -1,5 +1,6 @@
 package ar.com.clevcore.utils;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,7 +11,7 @@ import java.nio.channels.WritableByteChannel;
 
 public final class IOUtils {
 
-    private static final int DEFAULT_STREAM_BUFFER_SIZE = 10240;
+    public static final int DEFAULT_STREAM_BUFFER_SIZE = 10240;
 
     private IOUtils() {
         throw new AssertionError();
@@ -30,6 +31,18 @@ public final class IOUtils {
 
             return size;
         }
+    }
+
+    public static IOException close(Closeable resource) {
+        if (resource != null) {
+            try {
+                resource.close();
+            } catch (IOException e) {
+                return e;
+            }
+        }
+
+        return null;
     }
 
 }

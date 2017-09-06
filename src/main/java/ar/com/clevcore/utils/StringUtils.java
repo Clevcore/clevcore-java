@@ -148,20 +148,20 @@ public final class StringUtils {
         return value;
     }
 
-	public static String byteToBase64(byte[] bytes) {
-		return new String(Base64.encodeBase64(bytes));
-	}
+    public static String byteToBase64(byte[] bytes) {
+        return new String(Base64.encodeBase64(bytes));
+    }
 
-	public static String bytesToHex(byte[] bytes) {
-		StringBuffer result = new StringBuffer();
+    public static String bytesToHex(byte[] bytes) {
+        StringBuffer result = new StringBuffer();
 
-		for (byte byt : bytes) {
-			result.append(Integer.toString((byt & 0xff) + 0x100, 16).substring(1));
-		}
+        for (byte byt : bytes) {
+            result.append(Integer.toString((byt & 0xff) + 0x100, 16).substring(1));
+        }
 
-		return result.toString();
-	}
-	
+        return result.toString();
+    }
+
     public static String prepareToSearch(String value) {
         value = value.toUpperCase();
         value = removeAccentedCharacters(value);
@@ -198,6 +198,42 @@ public final class StringUtils {
         value = Normalizer.normalize(value, Normalizer.Form.NFD);
         value = value.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
         return value;
+    }
+
+    public static String camelcaseToHyphens(String value) {
+        return String.join("-", value.split("(?=[A-Z])")).toLowerCase();
+    }
+
+    public static String camelcaseToUnderscore(String value) {
+        return String.join("_", value.split("(?=[A-Z])")).toLowerCase();
+    }
+
+    public static String hyphensToCamelcase(String value) {
+        String array[] = value.toLowerCase().split("-");
+
+        for (int i = 1; i < array.length; i++) {
+            array[i] = upperCaseFirst(array[i]);
+        }
+
+        return String.join("", array);
+    }
+
+    public static String hyphensToUnderscore(String value) {
+        return value.toLowerCase().replace("-", "_");
+    }
+
+    public static String underscoreToCamelcase(String value) {
+        String array[] = value.toLowerCase().split("_");
+
+        for (int i = 1; i < array.length; i++) {
+            array[i] = upperCaseFirst(array[i]);
+        }
+
+        return String.join("", array);
+    }
+
+    public static String underscoreToHyphens(String value) {
+        return value.toLowerCase().replace("_", "-");
     }
 
 }

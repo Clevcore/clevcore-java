@@ -2,6 +2,8 @@ package ar.com.clevcore.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -167,8 +169,23 @@ public final class Utils {
     }
 
     public static boolean isNativeType(Class<?> clazzType) {
-        return clazzType.equals(Date.class) || clazzType.equals(Double.class) || clazzType.equals(Integer.class)
-                || clazzType.equals(Long.class) || clazzType.equals(String.class);
+        // @formatter:off
+        return clazzType.equals(Character.class) ||
+               clazzType.equals(String.class) ||
+
+               clazzType.equals(Date.class) ||
+
+               clazzType.equals(Boolean.class) ||
+               clazzType.equals(Byte.class) ||
+               clazzType.equals(Double.class) ||
+               clazzType.equals(Float.class) ||
+               clazzType.equals(Integer.class) ||
+               clazzType.equals(Long.class) ||
+               clazzType.equals(Short.class) ||
+
+               clazzType.equals(BigDecimal.class) ||
+               clazzType.equals(BigInteger.class);
+        // @formatter:on
     }
 
     public static Object getValueFromProperty(Object object, String property) {
